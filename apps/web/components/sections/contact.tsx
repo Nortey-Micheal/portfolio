@@ -80,7 +80,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-deep via-steel to-deep"
+      className="min-h-screen flex items-center justify-center py-20 px-6 bg-linear-to-b from-deep via-steel to-deep"
     >
       <motion.div
         variants={containerVariants}
@@ -101,7 +101,7 @@ export function Contact() {
         <motion.form
           variants={itemVariants}
           onSubmit={handleSubmit}
-          className="space-y-6 bg-card border border-teal/30 rounded-lg p-8 glow-sm mb-12"
+          className="space-y-6 bg-card border border-teal/30 rounded-lg p-8 mb-12"
         >
           {/* Name input */}
           <motion.div variants={itemVariants} className="space-y-2">
@@ -160,7 +160,7 @@ export function Contact() {
             type="submit"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full py-3 rounded-lg bg-teal text-deep font-semibold hover:bg-aqua transition-all duration-300 glow-teal"
+            className="w-full py-3 rounded-lg bg-foreground text-background font-semibold hover:bg-aqua transition-all duration-300 "
           >
             {submitted ? "Message sent! Thanks!" : "Send Message"}
           </motion.button>
