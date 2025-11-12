@@ -8,6 +8,7 @@ import { Footer } from "@components/footer"
 import { Navigation } from "@components/navigation"
 import { ParticleBackground } from "@components/particle-background"
 import { CustomCursor } from "@components/custom-cursor"
+import { ConsoleSidebar } from "@components/console-sidebar"
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
 
       {/* Particle background effect */}
       <ParticleBackground />
+
+      {/* Console sidebar navigation */}
+      <ConsoleSidebar />
 
       {/* Main content sections */}
       <Navigation />

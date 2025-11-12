@@ -31,11 +31,10 @@ export function CustomCursor() {
   return (
     <>
       {/* Hide default cursor */}
-      <style>{`* { cursor: none !important; }`}</style>
 
       {/* Main cursor dot */}
       <motion.div
-        className="fixed pointer-events-none z-50 w-2 h-2 bg-aqua  rounded-full"
+        className="fixed  z-50 w-2 h-2 bg-aqua  rounded-full"
         style={{
           x: x,
           y: y,
@@ -57,7 +56,7 @@ export function CustomCursor() {
           width: "10px",
           height: "10px",
           borderRadius: "50%",
-          border: "2px solid",
+          border: "3px solid",
           borderColor: "rgba(101, 216, 192, 0.4)",
           opacity: isVisible ? 1 : 0,
           boxShadow: "0 0 20px rgba(101, 216, 192, 0.3), inset 0 0 20px rgba(101, 216, 192, 0.2)",
@@ -76,7 +75,7 @@ export function CustomCursor() {
           width: "40px",
           height: "40px",
           borderRadius: "50%",
-          border: "1px solid",
+          border: "2px solid",
           borderColor: "rgba(101, 216, 192, 0.15)",
           opacity: isVisible ? 0.5 : 0,
           background: "radial-gradient(circle, rgba(101, 216, 192, 0.1) 0%, transparent 70%)",

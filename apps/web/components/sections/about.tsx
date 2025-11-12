@@ -1,6 +1,7 @@
 "use client"
 
 import { motion, useScroll, useTransform } from "framer-motion"
+import Image from "next/image"
 import { useRef } from "react"
 
 export function About() {
@@ -43,7 +44,7 @@ export function About() {
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, 150]) }}
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
       >
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,#65d8c0_1px,transparent_1px),linear-gradient(#65d8c0_1px,transparent_1px)] bg-[size:100px_100px]" />
+        <div className="absolute inset-0 bg-[linear-linear(90deg,#65d8c0_1px,transparent_1px),linear-linear(#65d8c0_1px,transparent_1px)] bg-[size:100px_100px]" />
       </motion.div>
 
       <motion.div
@@ -60,7 +61,7 @@ export function About() {
           </h2>
           <motion.div
             style={{ scaleX: scrollYProgress }}
-            className="h-1 bg-gradient-to-r from-teal to-aqua origin-left"
+            className="h-1 bg-linear-to-r from-teal to-aqua origin-left"
           />
         </motion.div>
 
@@ -69,11 +70,11 @@ export function About() {
           {/* Left: Image with parallax and tilt */}
           <motion.div variants={itemVariants} style={{ y: imageY }} className="relative group">
             <motion.div
-              className="relative aspect-square rounded-lg overflow-hidden border-2 border-teal/50 glow-sm bg-background"
+              className="relative aspect-square rounded-lg overflow-hidden border-2 border-teal/50 bg-background"
               style={{
                 background: "rgba(21, 38, 54, 0.4)",
                 backdropFilter: "blur(10px)",
-                borderOpacity,
+                // borderOpacity,
               }}
               whileHover={{
                 rotateY: 5,
@@ -81,11 +82,11 @@ export function About() {
               }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <img src="/developer-portrait-tech.jpg" alt="Nortey Michael" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-50" />
+              <Image width={500} height={500} src="/developer-portrait-tech.jpg" alt="Nortey Michael" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent opacity-50" />
 
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-teal/20 via-transparent to-aqua/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute inset-0 bg-linear-to-br from-teal/20 via-transparent to-aqua/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 animate={{
                   boxShadow: [
                     "inset 0 0 0px rgba(101, 216, 192, 0)",
@@ -131,10 +132,10 @@ export function About() {
               knowledge with the developer community. I believe in the power of collaboration and continuous learning.
             </motion.p>
 
-            <motion.div variants={itemVariants} className="pt-6">
+            <motion.div variants={itemVariants} className="pt-6 bg-aqua text-deep">
               <motion.a
                 href="#contact"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-aqua text-aqua font-semibold hover:bg-aqua/10 transition-all duration-300 group"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-aqua-glow text-teal font-semibold bg-foreground text-background transition-all duration-300 group" 
                 whileHover={{ x: 5 }}
               >
                 Let's Connect
