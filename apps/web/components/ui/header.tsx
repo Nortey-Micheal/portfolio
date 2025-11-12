@@ -7,8 +7,8 @@ import {
   UserSearch,
 } from "lucide-react"
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/sheet"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar"
 import {  useState } from "react"
 import Link from "next/link"
 
