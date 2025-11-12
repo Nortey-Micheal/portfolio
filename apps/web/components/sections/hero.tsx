@@ -132,7 +132,7 @@ export function Hero() {
                     href="#projects"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 rounded-lg bg-aqua text-backgroun font-semibold hover:glow-aqua transition-al duration-300 border border-teal inline-block text-center"
+                    className="px-8 py-4 rounded-lg bg-foreground text-background font-semibold hover:glow-aqua transition-al duration-300 border inline-block text-center"
                   >
                     Run Project <span className="text-xs ml-2">&gt;</span>
                   </motion.a>
