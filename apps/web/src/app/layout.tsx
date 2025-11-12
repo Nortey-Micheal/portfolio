@@ -32,9 +32,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <head>
-        <link href="https://fonts.googleapis.com/css2?family=Sansita:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
       <body className="font-[VendSans] antialiased bg-background text-foreground">
         {children}
       </body>

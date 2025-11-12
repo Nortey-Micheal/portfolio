@@ -12,7 +12,7 @@ export function Navigation() {
       className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-teal/30"
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-aqua glow-sm">
+        <Link href="/" className="text-xl font-bold text-aqua">
           Nortey
         </Link>
         <div className="flex gap-8 items-center text-sm">

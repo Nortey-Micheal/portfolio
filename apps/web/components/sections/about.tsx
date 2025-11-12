@@ -44,7 +44,7 @@ export function About() {
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, 150]) }}
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
       >
-        <div className="absolute inset-0 bg-[linear-linear(90deg,#65d8c0_1px,transparent_1px),linear-linear(#65d8c0_1px,transparent_1px)] bg-[size:100px_100px]" />
+        <div className="absolute inset-0 bg-[linear-linear(90deg,#65d8c0_1px,transparent_1px),linear-linear(#65d8c0_1px,transparent_1px)] bg-size-[100px_100px]" />
       </motion.div>
 
       <motion.div

@@ -37,7 +37,7 @@ export function Footer() {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Brand */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-bold text-aqua mb-4 glow-sm">Nortey.dev</h3>
+            <h3 className="text-lg font-bold text-aqua mb-4">Nortey.dev</h3>
             <p className="text-foreground/60 text-sm">
               Building innovative digital experiences with modern technologies.
             </p>
@@ -106,7 +106,7 @@ export function Footer() {
         {/* Divider with glow */}
         <motion.div
           variants={itemVariants}
-          className="h-px bg-gradient-to-r from-transparent via-teal to-transparent mb-8"
+          className="h-px bg-linear-to-r from-transparent via-teal to-transparent mb-8"
         />
 
         {/* Bottom section */}
