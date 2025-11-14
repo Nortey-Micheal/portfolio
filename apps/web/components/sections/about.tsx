@@ -38,7 +38,7 @@ export function About() {
     <section
       id="about"
       ref={containerRef}
-      className="min-h-screen flex items-center justify-center py-20 px-6 bg-background relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center py-20 px-6  relative overflow-hidden"
     >
       <motion.div
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, 150]) }}

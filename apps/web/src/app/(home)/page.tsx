@@ -25,8 +25,20 @@ export default function Home() {
       {/* Main content sections */}
       <Navigation />
       <Hero />
-      <About />
-      <Stack />
+      <div className="relative overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0 bg-[url('/images/code.png')] lg:bg-cover bg-cente bg-no-repeat bg-size-[300%_100%]"></div>
+
+        {/* Dimming overlay */}
+        <div className="absolute inset-0 bg-background/85"></div> {/* adjust opacity as needed */}
+
+        {/* Content */}
+        <div className="relative z-10">
+          <About />
+          <Stack />
+        </div>
+      </div>
+
       <Projects />
       <Contact />
       <Footer />

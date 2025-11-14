@@ -73,15 +73,8 @@ export function Stack() {
   return (
     <section
       id="stack"
-      className="min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-steel/30 to-deep relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center py-20 px-6"
     >
-      <div className="absolute inset-0 opacity-10 pointer-events-none text-teal/30 font-mono text-xs overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="whitespace-nowrap">
-            {codeSnippets[i % codeSnippets.length]}
-          </div>
-        ))}
-      </div>
 
       <motion.div
         variants={containerVariants}
@@ -127,7 +120,7 @@ export function Stack() {
                       category.skills.map((skill, idx) => (
                         <div
                           key={`${setIdx}-${idx}`}
-                          className="flex-shrink-0 p-4 rounded-lg bg-teal/5 hover:bg-aqua/10 transition-all duration-300 cursor-pointer min-w-max flex items-center gap-3"
+                          className="shrink-0 p-4 rounded-lg bg-teal/5 hover:bg-aqua/10 transition-all duration-300 cursor-pointer min-w-max flex items-center gap-3"
                           onMouseEnter={() => setHoveredSkill(skill.name)}
                           onMouseLeave={() => setHoveredSkill(null)}
                         >
@@ -138,9 +131,9 @@ export function Stack() {
                     )}
                   </motion.div>
 
-                  {/* Gradient overlays */}
-                  <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-steel via-steel/50 to-transparent pointer-events-none" />
-                  <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-steel via-steel/50 to-transparent pointer-events-none" />
+                  {/* linear overlays */}
+                  <div className="absolute inset-y-0 left-0 w-12 bg-linear-to-r from-steel via-steel/50 to-transparent pointer-events-none" />
+                  <div className="absolute inset-y-0 right-0 w-12 bg-linear-to-l from-steel via-steel/50 to-transparent pointer-events-none" />
                 </div>
               </motion.div>
             )
