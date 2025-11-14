@@ -1,10 +1,24 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 import { motion } from "framer-motion"
 
 export function ParticleBackground() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+
+  useEffect(() => {
+    setDimensions({ width: window.innerWidth, height: window.innerHeight })
+
+    const handleResize = () => {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight })
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  if (dimensions.width === 0) return null // prevent render until client-side
 
   return (
     <div ref={containerRef} className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -13,8 +27,8 @@ export function ParticleBackground() {
           key={i}
           className="absolute w-1 h-1 bg-teal rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
             opacity: Math.random() * 0.5 + 0.2,
           }}
           animate={{
@@ -24,20 +38,19 @@ export function ParticleBackground() {
           }}
           transition={{
             duration: Math.random() * 4 + 6,
-            repeat: Number.POSITIVE_INFINITY,
+            repeat: Infinity,
             ease: "easeInOut",
           }}
         />
       ))}
 
-      {/* Pulsing node network effect */}
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={`node-${i}`}
           className="absolute w-2 h-2 bg-aqua/40 rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
           }}
           animate={{
             scale: [1, 1.5, 1],
@@ -45,7 +58,7 @@ export function ParticleBackground() {
           }}
           transition={{
             duration: Math.random() * 2 + 3,
-            repeat: Number.POSITIVE_INFINITY,
+            repeat: Infinity,
             ease: "easeInOut",
             delay: i * 0.2,
           }}

@@ -6,8 +6,11 @@ import { useEffect, useState } from "react"
 
 export function Hero() {
   const [displayText, setDisplayText] = useState("")
-  const fullText = "> Initializing Portfolio...\n> Loading: Nortey Michael [Full Stack Developer]\n> Status: Online ✓"
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  const fullText =
+    "> Initializing Portfolio...\n> Loading: Nortey Michael [Full Stack Developer]\n> Status: Online ✓"
 
+  // Typing effect
   useEffect(() => {
     let index = 0
     const interval = setInterval(() => {
@@ -21,6 +24,17 @@ export function Hero() {
     return () => clearInterval(interval)
   }, [])
 
+  // Get window dimensions on client
+  useEffect(() => {
+    setDimensions({ width: window.innerWidth, height: window.innerHeight })
+
+    const handleResize = () => {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight })
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -32,13 +46,30 @@ export function Hero() {
     },
   }
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
+  // Only render particles if dimensions are available
+  const renderParticles = () => {
+    if (dimensions.width === 0 || dimensions.height === 0) return null
+
+    return [...Array(8)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute w-1 h-1 bg-teal rounded-full"
+        initial={{
+          x: Math.random() * dimensions.width,
+          y: Math.random() * dimensions.height,
+          opacity: Math.random() * 0.5,
+        }}
+        animate={{
+          y: [0, -100],
+          opacity: [0, 1, 0],
+        }}
+        transition={{
+          duration: Math.random() * 3 + 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    ))
   }
 
   return (
@@ -46,28 +77,7 @@ export function Hero() {
       <div className="absolute inset-0 opacity-5 pointer-events-none" />
 
       {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-teal rounded-full"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              opacity: Math.random() * 0.5,
-            }}
-            animate={{
-              y: [0, -100],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: Math.random() * 3 + 4,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">{renderParticles()}</div>
 
       <motion.div
         variants={containerVariants}
@@ -77,11 +87,8 @@ export function Hero() {
       >
         {/* Terminal window frame */}
         <motion.div
-          // variants={itemVariants}
           className="relative border border-teal/40 rounded-lg overflow-hidden backdrop-blur-md"
-          style={{
-            background: "rgba(21, 38, 54, 0.4)",
-          }}
+          style={{ background: "rgba(21, 38, 54, 0.4)" }}
         >
           {/* Terminal header */}
           <div className="bg-background/80 border-b border-teal/30 px-4 py-3 flex items-center gap-2">
@@ -102,14 +109,15 @@ export function Hero() {
                 <div key={i} className="flex items-start">
                   <span className="text-aqua mr-2">$</span>
                   <span>{line}</span>
-                  {i === displayText.split("\n").length - 1 && displayText.length < fullText.length && (
-                    <span className="cursor-blink text-aqua ml-1">_</span>
-                  )}
+                  {i === displayText.split("\n").length - 1 &&
+                    displayText.length < fullText.length && (
+                      <span className="cursor-blink text-aqua ml-1">_</span>
+                    )}
                 </div>
               ))}
             </div>
 
-            {/* Main title - appears after typing completes */}
+            {/* Main title */}
             {displayText.length >= fullText.length && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -126,7 +134,6 @@ export function Hero() {
                   React, Next.js, and cloud-native architectures.
                 </p>
 
-                {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <motion.a
                     href="#projects"
@@ -153,7 +160,7 @@ export function Hero() {
         {/* Scroll indicator */}
         <motion.div
           animate={{ y: [0, 12, 0] }}
-          transition={{ duration: 2.5, repeat: Number.POSITIVE_INFINITY }}
+          transition={{ duration: 2.5, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-teal"
         >
           <ArrowDown className="w-6 h-6" />
