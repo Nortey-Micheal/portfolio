@@ -61,7 +61,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
   }
 
   const background = useMotionTemplate`
-    radial-gradient(
+    radial-linear(
       250px circle at ${mouseX}px ${mouseY}px,
       rgba(101, 216, 192, 0.1),
       transparent 80%
@@ -91,10 +91,9 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
             animate={{ scale: isHovered ? 1.1 : 1 }}
             transition={{ duration: 0.3 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-70" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent opacity-70" />
 
           <motion.div
-            className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-mono border"
             animate={{
               boxShadow: isHovered
                 ? [
@@ -105,7 +104,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
                 : "0 0 10px rgba(101, 216, 192, 0.2)",
             }}
             transition={{ duration: 1.5, repeat: isHovered ? Number.POSITIVE_INFINITY : 0 }}
-            className={`${
+            className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-mono border ${
               project.status === "Live"
                 ? "bg-teal/20 text-teal border-teal/50"
                 : project.status === "Beta"
@@ -118,7 +117,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
         </div>
 
         {/* Project info */}
-        <div className="p-6 flex flex-col flex-grow relative z-10">
+        <div className="p-6 flex flex-col grow relative z-10">
           <motion.h3
             className="text-xl font-bold text-aqua mb-2 font-mono"
             animate={{ color: isHovered ? "#e0ffff" : "#c0ffff" }}
@@ -126,7 +125,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
             {`<project name="${project.name}" />`}
           </motion.h3>
 
-          <p className="text-foreground/70 text-sm mb-4 flex-grow leading-relaxed">{project.description}</p>
+          <p className="text-foreground/70 text-sm mb-4 grow leading-relaxed">{project.description}</p>
 
           {/* Tech stack */}
           <div className="flex flex-wrap gap-2 mb-4">
@@ -156,7 +155,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
             </motion.a>
 
             <motion.div
-              className="w-1 h-5 bg-gradient-to-b from-teal to-aqua opacity-50"
+              className="w-1 h-5 bg-linear-to-b from-teal to-aqua opacity-50"
               animate={{ opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
             />
@@ -259,7 +258,7 @@ export function Projects() {
           <h2 className="text-4xl md:text-5xl font-bold mb-2">
             <span className="text-teal">&lt;projects&gt;</span>
           </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-teal to-aqua" />
+          <div className="h-1 w-20 bg-linear-to-r from-teal to-aqua" />
         </motion.div>
 
         {/* Projects carousel */}
