@@ -1,5 +1,7 @@
-import { recipeType } from "../schemas/blogSchema";
+import { blogSchema } from "../schemas/blogSchema";
+import { projectSchema } from "../schemas/projectSchema";
 
 export const schemaTypes = [
-    recipeType
+    blogSchema,
+    projectSchema
 ]

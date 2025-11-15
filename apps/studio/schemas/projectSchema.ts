@@ -1,13 +1,13 @@
 import { defineType, defineField } from "sanity";
 
-export const blogSchema = defineType({
-  name: "blog",
-  title: "Blog Post",
+export const projectSchema = defineType({
+  name: "project",
+  title: "Project",
   type: "document",
   fields: [
     defineField({
       name: "title",
-      title: "Title",
+      title: "Project Title",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
@@ -16,31 +16,32 @@ export const blogSchema = defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: {
+        source: "title",
+        maxLength: 96,
+      },
       validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "excerpt",
-      title: "Short Excerpt",
+      name: "description",
+      title: "Short Description",
       type: "text",
-      rows: 3,
-      description: "A short summary that appears in blog previews.",
+      rows: 4,
     }),
 
     defineField({
-      name: "coverImage",
-      title: "Cover Image",
+      name: "image",
+      title: "Thumbnail Image",
       type: "image",
       options: { hotspot: true },
     }),
 
     defineField({
-      name: "content",
-      title: "Content",
+      name: "body",
+      title: "Project Content",
       type: "array",
       of: [{ type: "block" }],
-      description: "Main blog content with rich text.",
     }),
 
     defineField({
@@ -54,17 +55,21 @@ export const blogSchema = defineType({
     }),
 
     defineField({
-      name: "publishedAt",
-      title: "Published At",
-      type: "datetime",
-      validation: (Rule) => Rule.required(),
+      name: "github",
+      title: "GitHub Link",
+      type: "url",
     }),
 
     defineField({
-      name: "isFeatured",
-      title: "Featured Post",
-      type: "boolean",
-      initialValue: false,
+      name: "live",
+      title: "Live Demo Link",
+      type: "url",
+    }),
+
+    defineField({
+      name: "date",
+      title: "Project Date",
+      type: "datetime",
     }),
   ],
 });
