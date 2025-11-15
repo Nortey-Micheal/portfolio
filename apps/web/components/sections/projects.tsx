@@ -5,51 +5,11 @@ import type React from "react"
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion"
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect } from "react"
+import { Project } from "@/src/sanity/types"
+import { urlFor } from "@/src/sanity/image"
 
-const projects = [
-  {
-    name: "TutorLink",
-    description:
-      "A comprehensive tutoring platform connecting students with qualified educators. Features real-time messaging, video calls, and progress tracking.",
-    tech: ["React", "Node.js", "MongoDB", "Socket.io"],
-    live: "https://example.com",
-    github: "https://github.com",
-    image: "/placeholder.svg?key=proj1",
-    status: "Live",
-  },
-  {
-    name: "TaskFlow",
-    description:
-      "Collaborative project management tool with real-time updates, team workspaces, and intelligent task automation using AI insights.",
-    tech: ["Next.js", "PostgreSQL", "Tailwind CSS", "Vercel"],
-    live: "https://example.com",
-    github: "https://github.com",
-    image: "/placeholder.svg?key=proj2",
-    status: "Live",
-  },
-  {
-    name: "Code Analytics",
-    description:
-      "Developer analytics dashboard providing insights into repository health, code quality metrics, and team productivity trends.",
-    tech: ["Next.js", "GraphQL", "PostgreSQL", "D3.js"],
-    live: "https://example.com",
-    github: "https://github.com",
-    image: "/placeholder.svg?key=proj3",
-    status: "Maintained",
-  },
-  {
-    name: "MindNote",
-    description:
-      "Intelligent note-taking app with markdown support, AI-powered tagging, and secure cloud sync across all devices.",
-    tech: ["React Native", "Firebase", "TypeScript", "AWS"],
-    live: "https://example.com",
-    github: "https://github.com",
-    image: "/placeholder.svg?key=proj4",
-    status: "Beta",
-  },
-]
 
-function ProjectCard({ project, index }: { project: (typeof projects)[0]; index: number }) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -59,6 +19,15 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
     mouseX.set(e.clientX - rect.left)
     mouseY.set(e.clientY - rect.top)
   }
+
+  const imageUrl = project?.image
+  ? urlFor(project?.image)
+      .height(310)
+      .width(550)
+      .quality(80)
+      .auto("format")
+      .url()
+  : `https://placehold.co/550/png`;
 
   const background = useMotionTemplate`
     radial-linear(
@@ -85,8 +54,8 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
         {/* Project image section */}
         <div className="relative h-48 overflow-hidden bg-background">
           <motion.img
-            src={project.image || "/placeholder.svg"}
-            alt={project.name}
+            src={imageUrl || "/placeholder.svg"}
+            alt={project?.title}
             className="w-full h-full object-cover"
             animate={{ scale: isHovered ? 1.1 : 1 }}
             transition={{ duration: 0.3 }}
@@ -105,14 +74,14 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
             }}
             transition={{ duration: 1.5, repeat: isHovered ? Number.POSITIVE_INFINITY : 0 }}
             className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-mono border ${
-              project.status === "Live"
+              project?.status === "Live"
                 ? "bg-teal/20 text-teal border-teal/50"
-                : project.status === "Beta"
+                : project?.status === "Beta"
                   ? "bg-aqua/20 text-aqua border-aqua/50"
                   : "bg-foreground/10 text-foreground border-foreground/30"
             }`}
           >
-            {project.status}
+            {project?.status}
           </motion.div>
         </div>
 
@@ -122,14 +91,14 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
             className="text-xl font-bold text-aqua mb-2 font-mono"
             animate={{ color: isHovered ? "#e0ffff" : "#c0ffff" }}
           >
-            {`<project name="${project.name}" />`}
+            {`<project name="${project?.title}" />`}
           </motion.h3>
 
-          <p className="text-foreground/70 text-sm mb-4 grow leading-relaxed">{project.description}</p>
+          <p className="text-foreground/70 text-sm mb-4 grow leading-relaxed">{project?.description}</p>
 
           {/* Tech stack */}
           <div className="flex flex-wrap gap-2 mb-4">
-            {project.tech.map((tech) => (
+            {project?.tech?.map((tech) => (
               <motion.span
                 key={tech}
                 className="px-3 py-1 text-xs rounded-full bg-teal/10 text-teal border border-teal/30 font-mono"
@@ -144,7 +113,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
           {/* Links */}
           <div className="flex gap-3 pt-4 border-t border-teal/20">
             <motion.a
-              href={project.live}
+              href={project?.live}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-aqua hover:text-teal transition-colors group/link font-mono"
@@ -161,7 +130,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
             />
 
             <motion.a
-              href={project.github}
+              href={project?.github}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-aqua hover:text-teal transition-colors group/link font-mono"
@@ -188,17 +157,19 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
   )
 }
 
-export function Projects() {
+export function Projects({projects}:{projects:Project[]}) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
 
   useEffect(() => {
+    if (!projects || projects.length === 0) return
+    
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % projects.length)
       setDirection(1)
     }, 8000) // Faster than stacks - 8s vs 20s
     return () => clearInterval(interval)
-  }, [])
+  }, [projects.length])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -307,15 +278,15 @@ export function Projects() {
                     idx === currentIndex ? "bg-aqua w-8" : "bg-teal/30 w-2 hover:bg-teal/50"
                   }`}
                   whileHover={{ scale: 1.2 }}
-                  aria-label={`Go to project ${idx + 1}: ${project.name}`}
+                  aria-label={`Go to project ${idx + 1}: ${project?.title}`}
                 />
               ))}
             </div>
             {/* Project name and counter display */}
             <div className="text-center">
-              <p className="text-aqua font-mono text-sm">{projects[currentIndex].name}</p>
+              <p className="text-aqua font-mono text-sm">{projects[currentIndex]?.title}</p>
               <p className="text-teal/60 font-mono text-xs">
-                {currentIndex + 1} / {projects.length}
+                {currentIndex + 1} / {projects?.length || 0}
               </p>
             </div>
           </div>

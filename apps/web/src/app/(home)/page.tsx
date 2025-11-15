@@ -9,8 +9,10 @@ import { Navigation } from "@components/navigation"
 import { ParticleBackground } from "@components/particle-background"
 import { CustomCursor } from "@components/custom-cursor"
 import { ConsoleSidebar } from "@components/console-sidebar"
+import { useProjects } from "@/hooks/useProjects"
 
 export default function Home() {
+  const {projects,loading,error} = useProjects()
   return (
     <main className="bg-background text-foreground overflow-hidden relative">
       {/* Custom cursor with spotlight effect */}
@@ -39,7 +41,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Projects />
+      <Projects projects={projects}/>
       <Contact />
       <Footer />
     </main>
