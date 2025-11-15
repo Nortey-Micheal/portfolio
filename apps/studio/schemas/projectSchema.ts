@@ -28,6 +28,7 @@ export const projectSchema = defineType({
       title: "Short Description",
       type: "text",
       rows: 4,
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -35,6 +36,7 @@ export const projectSchema = defineType({
       title: "Thumbnail Image",
       type: "image",
       options: { hotspot: true },
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -42,6 +44,7 @@ export const projectSchema = defineType({
       title: "Project Content",
       type: "array",
       of: [{ type: "block" }],
+      description: "Full write-up about the project",
     }),
 
     defineField({
@@ -52,6 +55,18 @@ export const projectSchema = defineType({
       options: {
         layout: "tags",
       },
+      description: "Keywords like React, Next.js, Dashboard, UI, etc.",
+    }),
+
+    defineField({
+      name: "tech",
+      title: "Tech Stack",
+      type: "array",
+      of: [{ type: "string" }],
+      options: {
+        layout: "tags",
+      },
+      description: "Technologies used (e.g., TypeScript, MongoDB)",
     }),
 
     defineField({
@@ -67,9 +82,21 @@ export const projectSchema = defineType({
     }),
 
     defineField({
+      name: "status",
+      title: "Status",
+      type: "string",
+      options: {
+        list: ["Live", "Maintained", "Beta", "Archived"],
+        layout: "dropdown",
+      },
+      initialValue: "Live",
+    }),
+
+    defineField({
       name: "date",
       title: "Project Date",
       type: "datetime",
+      validation: (Rule) => Rule.required(),
     }),
   ],
 });
