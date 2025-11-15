@@ -82,7 +82,7 @@ export function About() {
               }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <Image width={500} height={500} src="/developer-portrait-tech.jpg" alt="Nortey Michael" className="w-full h-full object-cover" />
+              <Image width={500} height={500} src="/images/cartoon-me.png" alt="Nortey Michael" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent opacity-50" />
 
               <motion.div
