@@ -36,17 +36,6 @@ const stackCategories = [
   },
 ]
 
-// Code snippets for background
-const codeSnippets = [
-  "const app = express();",
-  "function* generator() {}",
-  "await fetch('/api/data');",
-  "interface User { id: string; }",
-  "type Props = { children: React.ReactNode }",
-  "export default function Component() {}",
-  "const [state, setState] = useState(null);",
-  "useEffect(() => { return cleanup; }, []);",
-]
 
 export function Stack() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
@@ -98,12 +87,12 @@ export function Stack() {
             const duration = 30
 
             return (
-              <motion.div key={category.name} variants={itemVariants} className="space-y-4">
-                <h3 className="text-xl font-bold text-teal flex items-center gap-2">
+              <motion.div key={category.name} variants={itemVariants} className="space-y-4 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-teal flex items-center gap-2 mb-0">
                   <span className="text-aqua">#</span> {category.name}
                 </h3>
 
-                <div className="relative h-24 overflow-hidden rounded-lg bg-teal/5">
+                <div className=" relative overflow-hidden rounded-lg bg-teal/5">
                   <motion.div
                     className="flex gap-4 h-full"
                     animate={{
@@ -120,7 +109,7 @@ export function Stack() {
                       category.skills.map((skill, idx) => (
                         <div
                           key={`${setIdx}-${idx}`}
-                          className="shrink-0 p-4 rounded-lg bg-teal/5 hover:bg-aqua/10 transition-all duration-300 cursor-pointer min-w-max flex items-center gap-3"
+                          className="shrink-0 rounded-lg bg-teal/5 hover:bg-aqua/10 transition-all duration-300 cursor-pointer min-w-max flex items-center gap-3"
                           onMouseEnter={() => setHoveredSkill(skill.name)}
                           onMouseLeave={() => setHoveredSkill(null)}
                         >
