@@ -30,14 +30,12 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Hide default cursor */}
-
       {/* Main cursor dot */}
       <motion.div
-        className="fixed  z-50 w-2 h-2 bg-aqua  rounded-full"
+        className="fixed z-50 w-2 h-2 bg-aqua rounded-full pointer-events-none"
         style={{
-          x: x,
-          y: y,
+          x,
+          y,
           translateX: "-50%",
           translateY: "-50%",
           opacity: isVisible ? 1 : 0,
@@ -47,17 +45,16 @@ export function CustomCursor() {
 
       {/* Spotlight circle */}
       <motion.div
-        className="fixed pointer-events-none z-40"
+        className="fixed z-40 pointer-events-none"
         style={{
-          x: x,
-          y: y,
+          x,
+          y,
           translateX: "-50%",
           translateY: "-50%",
           width: "10px",
           height: "10px",
           borderRadius: "50%",
-          border: "3px solid",
-          borderColor: "rgba(101, 216, 192, 0.4)",
+          border: "3px solid rgba(101, 216, 192, 0.4)",
           opacity: isVisible ? 1 : 0,
           boxShadow: "0 0 20px rgba(101, 216, 192, 0.3), inset 0 0 20px rgba(101, 216, 192, 0.2)",
         }}
@@ -66,19 +63,18 @@ export function CustomCursor() {
 
       {/* Larger glow circle */}
       <motion.div
-        className="fixed pointer-events-none z-30"
+        className="fixed z-30 pointer-events-none"
         style={{
-          x: x,
-          y: y,
+          x,
+          y,
           translateX: "-50%",
           translateY: "-50%",
           width: "40px",
           height: "40px",
           borderRadius: "50%",
-          border: "2px solid",
-          borderColor: "rgba(101, 216, 192, 0.15)",
+          border: "2px solid rgba(101, 216, 192, 0.15)",
           opacity: isVisible ? 0.5 : 0,
-          background: "radial-gradient(circle, rgba(101, 216, 192, 0.1) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(101, 216, 192, 0.1) 50%, transparent 70%)",
         }}
         transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 35 }}
       />
