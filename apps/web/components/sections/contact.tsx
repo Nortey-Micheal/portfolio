@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion } from "framer-motion"
 import { useState } from "react"
-import { Mail, Github, Linkedin, Twitter } from "lucide-react"
+import { Mail, Github, Linkedin, Twitter, PhoneOutgoing } from "lucide-react"
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -54,25 +54,25 @@ export function Contact() {
     {
       name: "GitHub",
       icon: Github,
-      url: "https://github.com",
+      url: "https://github.com/Nortey-Micheal",
       color: "hover:text-teal",
     },
     {
       name: "LinkedIn",
       icon: Linkedin,
-      url: "https://linkedin.com",
+      url: "https://www.linkedin.com/in/nortey-micheal-45726225b/",
       color: "hover:text-teal",
     },
     {
-      name: "Twitter",
-      icon: Twitter,
-      url: "https://twitter.com",
+      name: "WhatsApp",
+      icon: PhoneOutgoing,
+      url: "https://wa.me/+233243634567",
       color: "hover:text-aqua",
     },
     {
       name: "Email",
       icon: Mail,
-      url: "mailto:nortey@example.com",
+      url: "mailto:norteymicheal91@gmail.com",
       color: "hover:text-teal",
     },
   ]

@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Home, FileText, Code2, Mail, Github, Linkedin } from "lucide-react"
+import { Menu, X, Home, FileText, Code2, Mail, Github, Linkedin, PhoneOutgoing } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 
@@ -29,8 +29,27 @@ export function ConsoleSidebar() {
   ]
 
   const social = [
-    { icon: Github, label: "GitHub", href: "https://github.com" },
-    { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com" },
+    { 
+      icon: Github, 
+      label: "GitHub", 
+      href: "https://github.com/Nortey-Micheal" 
+    },
+    { 
+      icon: Linkedin, 
+      label: "LinkedIn", 
+      href: "https://www.linkedin.com/in/nortey-micheal-45726225b/" },
+    {
+      name: "WhatsApp",
+      icon: PhoneOutgoing,
+      href: "https://wa.me/+233243634567",
+      color: "hover:text-aqua",
+    },
+    {
+      name: "Email",
+      icon: Mail,
+      href: "mailto:norteymicheal91@gmail.com",
+      color: "hover:text-teal",
+    },
   ]
 
   return (
