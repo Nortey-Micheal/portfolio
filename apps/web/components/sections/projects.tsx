@@ -9,7 +9,7 @@ import { Project } from "@/src/sanity/types"
 import { urlFor } from "@/src/sanity/image"
 
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index, isFocused,isMobile }: { project: Project; index: number, isFocused:boolean, isMobile:boolean }) {
   const [isHovered, setIsHovered] = useState(false)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -45,7 +45,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onMouseMove={handleMouseMove}
-      className="group relative h-full"
+      className={` group relative h-full ${
+      isFocused ? 'border-aqua/60' : 'border-teal/20'} 
+      p-${isMobile ? '2' : '3'} ${isMobile ? 'min-h-72' : 'min-h-80'} 
+    `}
     >
       {/* Card container */}
       <div className="relative h-full rounded-lg overflow-hidden border border-teal/30 bg-background transition-all duration-300">
@@ -159,114 +162,283 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
 export function Projects({ projects }: { projects: Project[] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isLoading, setIsLoading] = useState(true) // add loading state
+  const containerRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Auto-slide function
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      setIsLoading(false)
+    }
+  }, [projects])
+
   const startAutoSlide = () => {
     if (intervalRef.current) clearInterval(intervalRef.current)
+    if (isHovered || isMobile) return
+    
     intervalRef.current = setInterval(() => {
-      setDirection(1)
       setCurrentIndex((prev) => (prev + 1) % projects.length)
     }, 8000)
   }
 
-  // Initialize auto-slide
   useEffect(() => {
     if (!projects || projects.length === 0) return
-
     startAutoSlide()
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current)
     }
-  }, [projects.length])
+  }, [projects.length, isHovered, isMobile])
 
-
-  // Reset timer whenever user navigates manually
   const handlePaginate = (newDirection: number) => {
-    setDirection(newDirection)
     setCurrentIndex(
       (prev) => (prev + newDirection + projects.length) % projects.length
     )
     startAutoSlide()
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') handlePaginate(-1)
+      if (e.key === 'ArrowRight') handlePaginate(1)
+    }
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!scrollContainerRef.current?.contains(e.target as Node)) return
+      e.preventDefault()
+      
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        // Horizontal scroll
+        if (e.deltaX > 0) handlePaginate(1)
+        else handlePaginate(-1)
+      } else {
+        // Vertical scroll (on mobile, treat as horizontal)
+        if (e.deltaY > 0) handlePaginate(1)
+        else handlePaginate(-1)
+      }
+    }
+
+    let touchStartX = 0
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touchEndX = e.changedTouches[0].clientX
+      const diff = touchStartX - touchEndX
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) handlePaginate(1)
+        else handlePaginate(-1)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    scrollContainerRef.current?.addEventListener('wheel', handleWheel, { passive: false })
+    scrollContainerRef.current?.addEventListener('touchstart', handleTouchStart)
+    scrollContainerRef.current?.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      scrollContainerRef.current?.removeEventListener('wheel', handleWheel)
+      scrollContainerRef.current?.removeEventListener('touchstart', handleTouchStart)
+      scrollContainerRef.current?.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [currentIndex, projects.length])
+
+  const getVisibleItems = () => {
+    if (!projects || projects.length === 0) return [0, 0, 0]
+    
+    const items = []
+    for (let i = -1; i <= 1; i++) {
+      items.push((currentIndex + i + projects.length) % projects.length)
+    }
+    return items
   }
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  }
+  const visibleIndices = getVisibleItems()
 
-  const slideVariants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 1000 : -1000, opacity: 0 }),
-    center: { zIndex: 1, x: 0, opacity: 1 },
-    exit: (dir: number) => ({ zIndex: 0, x: dir < 0 ? 1000 : -1000, opacity: 0 }),
+  if (isLoading) {
+    return (
+      <section className={`flex items-center justify-center px-6 relative overflow-hidden ${
+        isMobile ? 'min-h-screen' : 'min-h-screen py-20'
+      }`}>
+        <div className={`w-full relative z-10 ${isMobile ? 'fixed bottom-0 left-0 right-0 px-6 py-12 bg-linear-to-t from-background via-background to-transparent' : 'max-w-6xl mx-auto'}`}>
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }} 
+            className="mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-2">
+              <span className="text-teal">&lt;projects&gt;</span>
+            </h2>
+            <div className="h-1 w-20 bg-linear-to-r from-teal to-aqua" />
+          </motion.div>
+
+          <div className="relative w-full">
+            <div className={`flex items-center ${isMobile ? 'gap-3 justify-center' : 'gap-4 md:gap-6 justify-center'}`}>
+              {!isMobile && <div className="shrink-0 p-2 rounded-full border border-teal/30 bg-teal/10 h-10 w-10" />}
+              
+              <div className={`flex gap-${isMobile ? '3' : '4'} md:gap-6 flex-1 justify-center`}>
+                {[0, 1, 2].map((idx) => (
+                  <div
+                    key={idx}
+                    className={`transition-all duration-300 ${
+                      idx === 1 ? `flex-1 ${isMobile ? 'max-w-sm' : 'max-w-xl'}` : `flex-1 ${isMobile ? 'max-w-xs' : 'max-w-xs'}`
+                    }`}
+                  >
+                    <div className={`bg-card rounded-lg border border-teal/20 p-${isMobile ? '6' : '8'} ${isMobile ? 'min-h-72' : 'min-h-80'} animate-pulse`} />
+                  </div>
+                ))}
+              </div>
+
+              {!isMobile && <div className="shrink-0 p-2 rounded-full border border-teal/30 bg-teal/10 h-10 w-10" />}
+            </div>
+
+            <div className="flex flex-col items-center gap-4 mt-8">
+              <div className="flex justify-center gap-2">
+                {[0, 1, 2, 3, 4].map((idx) => (
+                  <div key={idx} className={`h-2 rounded-full bg-teal/20 ${idx === 2 ? 'w-8' : 'w-2'} animate-pulse`} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-20 px-6 bg-background relative overflow-hidden">
+    <section className={`flex items-center justify-center px-6 relative overflow-hidden ${
+      isMobile ? 'min-h-screen' : 'min-h-screen py-20'
+    }`}>
       <motion.div
-        variants={containerVariants}
+        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        className="max-w-5xl mx-auto w-full relative z-10"
+        className={`w-full relative z-10 ${isMobile ? 'fixed bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent' : 'max-w-6xl mx-auto'}`}
       >
-        {/* Header */}
-        <motion.div variants={itemVariants} className="mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-2">
-            <span className="text-teal">&lt;projects&gt;</span>
-          </h2>
-          <div className="h-1 w-20 bg-linear-to-r from-teal to-aqua" />
-        </motion.div>
-
-        {/* Carousel */}
-        <div className="relative w-[90%] lg:w-1/2 mx-auto">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
-            }}
-            className="w-full"
+        <>
+          {/* Header - hidden on mobile */}
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }} 
+            className="mb-5 lg:mb-16"
           >
-            <ProjectCard project={projects[currentIndex]} index={currentIndex} />
+            <h2 className="text-4xl md:text-5xl font-bold mb-2">
+              <span className="text-teal">&lt;projects&gt;</span>
+            </h2>
+            <div className="h-1 w-20 bg-linear-to-r from-teal to-aqua" />
           </motion.div>
+        </>
 
-          {/* Arrows */}
-          <button
-            onClick={() => handlePaginate(-1)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 md:-translate-x-16 z-20 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group"
+        <div 
+          className="relative w-full"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => {
+            setIsHovered(false)
+            startAutoSlide()
+          }}
+          ref={containerRef}
+        >
+          {/* Items Container - Horizontal chain layout */}
+          <div 
+            className={`flex items-center ${isMobile ? 'gap-3 justify-center' : 'gap-4 md:gap-6 justify-center'}`}
+            ref={scrollContainerRef}
           >
-            <ChevronLeft className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
-          </button>
-          <button
-            onClick={() => handlePaginate(1)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 md:translate-x-16 z-20 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group"
-          >
-            <ChevronRight className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
-          </button>
+            {/* Navigation Arrows - hidden on mobile */}
+            {
+              !isMobile && <>
+              <button
+                onClick={() => handlePaginate(-1)}
+                className="shrink-0 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-aqua"
+                aria-label="Previous project"
+              >
+                <ChevronLeft className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
+              </button>
+            </>
+            }
 
-          {/* Dots & Titles */}
+            <div className={`flex flex-col lg:flex-row h-[500px] lg:h-[700px] overflow-hidden gap-${isMobile ? '3' : '4'} md:gap-6 flex-1 justify-center`}>
+              {visibleIndices.map((idx, position) => (
+                <motion.div
+                  key={idx}
+                  layoutId={`card-${idx}`}
+                  className={`transition-all duration-300 ${
+                    position === 1 ? `flex-1 ${isMobile ? 'max-w-sm' : 'max-w-xl'}` : `flex-1 ${isMobile ? 'max-w-xs' : 'max-w-xs'} opacity-60 hover:opacity-75`
+                  }`}
+                  onClick={() => {
+                    if (position !== 1) {
+                      const newIndex = position === 0 ? -1 : 1
+                      handlePaginate(newIndex)
+                    }
+                  }}
+                  style={{ cursor: position !== 1 ? 'pointer' : 'default' }}
+                >
+                  <motion.div
+                    animate={{
+                      scale: position === 1 ? 1 : 0.85,
+                      y: 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  >
+                    <ProjectCard 
+                      project={projects[idx]} 
+                      index={idx} 
+                      isFocused={position === 1}
+                      isMobile={isMobile}
+                    />
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Right Arrow - hidden on mobile */}
+            {!isMobile && (
+              <button
+                onClick={() => handlePaginate(1)}
+                className="shrink-0 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-aqua"
+                aria-label="Next project"
+              >
+                <ChevronRight className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
+              </button>
+            )}
+          </div>
+
+          <div className="pt-5 w-screen flex justify-center items-center gap-5 ">
+            <button
+              onClick={() => handlePaginate(-1)}
+              className="shrink-0 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-aqua"
+              aria-label="Previous project"
+            >
+              <ChevronLeft className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
+            </button>
+            <button
+                onClick={() => handlePaginate(1)}
+                className="shrink-0 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-aqua"
+                aria-label="Next project"
+              >
+                <ChevronRight className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
+              </button>
+          </div>
+
+          {/* Indicators & Info */}
           <div className="flex flex-col items-center gap-4 mt-8">
+            {/* Progress Dots */}
             <div className="flex justify-center gap-2">
               {projects.map((_, idx) => (
                 <motion.button
                   key={idx}
                   onClick={() => {
-                    setDirection(idx > currentIndex ? 1 : -1)
                     setCurrentIndex(idx)
                     startAutoSlide()
                   }}
@@ -274,23 +446,63 @@ export function Projects({ projects }: { projects: Project[] }) {
                     idx === currentIndex ? "bg-aqua w-8" : "bg-teal/30 w-2 hover:bg-teal/50"
                   }`}
                   whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.95 }}
                   aria-label={`Go to project ${idx + 1}`}
+                  aria-current={idx === currentIndex ? "true" : "false"}
                 />
               ))}
             </div>
+            
+            {/* Project Title & Counter */}
             <div className="text-center">
               <p className="text-aqua font-mono text-sm">{projects[currentIndex]?.title}</p>
               <p className="text-teal/60 font-mono text-xs">
                 {currentIndex + 1} / {projects.length}
               </p>
             </div>
+
+            {isHovered && (
+              <motion.p 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="text-teal/40 font-mono text-xs"
+              >
+                ⏸ Paused
+              </motion.p>
+            )}
           </div>
+
+          {isMobile && (
+            <div className="flex flex-col items-center gap-3 mt-6">
+              {/* Mobile Indicators */}
+              <div className="flex justify-center gap-1.5">
+                {projects.map((_, idx) => (
+                  <motion.button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      idx === currentIndex ? "bg-aqua w-6" : "bg-teal/30 w-1.5"
+                    }`}
+                    aria-label={`Go to project ${idx + 1}`}
+                    aria-current={idx === currentIndex ? "true" : "false"}
+                  />
+                ))}
+              </div>
+              
+              {/* Mobile Title */}
+              <p className="text-aqua font-mono text-xs">{projects[currentIndex]?.title}</p>
+            </div>
+          )}
         </div>
 
-        {/* Footer tag */}
-        <motion.div variants={itemVariants} className="text-teal/50 font-mono text-sm mt-16">
-          {"</projects>"}
-        </motion.div>
+        {!isMobile && (
+          <motion.div 
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }} 
+            className="text-teal/50 font-mono text-sm mt-16"
+          >
+            {"</projects>"}
+          </motion.div>
+        )}
       </motion.div>
     </section>
   )
