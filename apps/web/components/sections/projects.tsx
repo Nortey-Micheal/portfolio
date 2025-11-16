@@ -4,7 +4,7 @@ import type React from "react"
 
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion"
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Project } from "@/src/sanity/types"
 import { urlFor } from "@/src/sanity/image"
 
@@ -157,66 +157,61 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   )
 }
 
-export function Projects({projects}:{projects:Project[]}) {
+export function Projects({ projects }: { projects: Project[] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Auto-slide function
+  const startAutoSlide = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      setDirection(1)
+      setCurrentIndex((prev) => (prev + 1) % projects.length)
+    }, 8000)
+  }
+
+  // Initialize auto-slide
   useEffect(() => {
     if (!projects || projects.length === 0) return
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % projects.length)
-      setDirection(1)
-    }, 8000) // Faster than stacks - 8s vs 20s
-    return () => clearInterval(interval)
+
+    startAutoSlide()
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
   }, [projects.length])
+
+
+  // Reset timer whenever user navigates manually
+  const handlePaginate = (newDirection: number) => {
+    setDirection(newDirection)
+    setCurrentIndex(
+      (prev) => (prev + newDirection + projects.length) % projects.length
+    )
+    startAutoSlide()
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   }
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   }
 
   const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 1000 : -1000,
-      opacity: 0,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-    },
-    exit: (dir: number) => ({
-      zIndex: 0,
-      x: dir < 0 ? 1000 : -1000,
-      opacity: 0,
-    }),
-  }
-
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection)
-    setCurrentIndex((prev) => (prev + newDirection + projects.length) % projects.length)
+    enter: (dir: number) => ({ x: dir > 0 ? 1000 : -1000, opacity: 0 }),
+    center: { zIndex: 1, x: 0, opacity: 1 },
+    exit: (dir: number) => ({ zIndex: 0, x: dir < 0 ? 1000 : -1000, opacity: 0 }),
   }
 
   return (
-    <section
-      id="projects"
-      className="min-h-screen flex items-center justify-center py-20 px-6 bg-background relative overflow-hidden"
-    >
+    <section className="min-h-screen flex items-center justify-center py-20 px-6 bg-background relative overflow-hidden">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -224,7 +219,7 @@ export function Projects({projects}:{projects:Project[]}) {
         viewport={{ once: true, amount: 0.1 }}
         className="max-w-5xl mx-auto w-full relative z-10"
       >
-        {/* Section header */}
+        {/* Header */}
         <motion.div variants={itemVariants} className="mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-2">
             <span className="text-teal">&lt;projects&gt;</span>
@@ -232,8 +227,8 @@ export function Projects({projects}:{projects:Project[]}) {
           <div className="h-1 w-20 bg-linear-to-r from-teal to-aqua" />
         </motion.div>
 
-        {/* Projects carousel */}
-        <div className="relative w-full lg:w-1/2 lg:mx-auto">
+        {/* Carousel */}
+        <div className="relative w-[90%] lg:w-1/2 mx-auto">
           <motion.div
             key={currentIndex}
             custom={direction}
@@ -250,49 +245,49 @@ export function Projects({projects}:{projects:Project[]}) {
             <ProjectCard project={projects[currentIndex]} index={currentIndex} />
           </motion.div>
 
-          {/* Navigation buttons */}
+          {/* Arrows */}
           <button
-            onClick={() => paginate(-1)}
+            onClick={() => handlePaginate(-1)}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 md:-translate-x-16 z-20 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group"
           >
             <ChevronLeft className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
           </button>
-
           <button
-            onClick={() => paginate(1)}
+            onClick={() => handlePaginate(1)}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 md:translate-x-16 z-20 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group"
           >
             <ChevronRight className="w-6 h-6 text-aqua group-hover:text-teal transition-colors" />
           </button>
 
+          {/* Dots & Titles */}
           <div className="flex flex-col items-center gap-4 mt-8">
             <div className="flex justify-center gap-2">
-              {projects.map((project, idx) => (
+              {projects.map((_, idx) => (
                 <motion.button
                   key={idx}
                   onClick={() => {
                     setDirection(idx > currentIndex ? 1 : -1)
                     setCurrentIndex(idx)
+                    startAutoSlide()
                   }}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     idx === currentIndex ? "bg-aqua w-8" : "bg-teal/30 w-2 hover:bg-teal/50"
                   }`}
                   whileHover={{ scale: 1.2 }}
-                  aria-label={`Go to project ${idx + 1}: ${project?.title}`}
+                  aria-label={`Go to project ${idx + 1}`}
                 />
               ))}
             </div>
-            {/* Project name and counter display */}
             <div className="text-center">
               <p className="text-aqua font-mono text-sm">{projects[currentIndex]?.title}</p>
               <p className="text-teal/60 font-mono text-xs">
-                {currentIndex + 1} / {projects?.length || 0}
+                {currentIndex + 1} / {projects.length}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Closing tag */}
+        {/* Footer tag */}
         <motion.div variants={itemVariants} className="text-teal/50 font-mono text-sm mt-16">
           {"</projects>"}
         </motion.div>
