@@ -270,7 +270,7 @@ export function Projects({ projects }: { projects: Project[] }) {
 
   if (isLoading) {
     return (
-      <section className={`flex items-center justify-center px-6 relative overflow-hidden ${
+      <section id="projects" className={`flex items-center justify-center px-6 relative overflow-hidden ${
         isMobile ? 'min-h-screen' : 'min-h-screen py-20'
       }`}>
         <div className={`w-full relative z-10 ${isMobile ? 'fixed bottom-0 left-0 right-0 px-6 py-12 bg-linear-to-t from-background via-background to-transparent' : 'max-w-6xl mx-auto'}`}>
@@ -318,7 +318,7 @@ export function Projects({ projects }: { projects: Project[] }) {
   }
 
   return (
-    <section className={`flex items-center justify-center px-6 relative overflow-hidden ${
+    <section id="projects" className={`flex items-center justify-center px-6 relative overflow-hidden ${
       isMobile ? 'min-h-screen' : 'min-h-screen py-20'
     }`}>
       <motion.div
@@ -414,7 +414,7 @@ export function Projects({ projects }: { projects: Project[] }) {
             )}
           </div>
 
-          <div className="pt-5 w-screen flex justify-center items-center gap-5 ">
+          <div className={`pt-5 w-screen flex justify-center items-center gap-5 ${!isMobile && 'hidden'}`}>
             <button
               onClick={() => handlePaginate(-1)}
               className="shrink-0 p-2 rounded-full border border-teal/30 hover:border-aqua bg-teal/10 hover:bg-aqua/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-aqua"

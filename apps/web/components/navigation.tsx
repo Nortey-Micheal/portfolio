@@ -16,19 +16,19 @@ export function Navigation() {
           <span className="lg:hidden">{'<'}</span>Nortey<span className="lg:hidden">.Czar {'/>'}</span>
         </Link>
         <div className="hidden lg:flex gap-8 items-center text-sm">
-          <Link href="#about" className="hover:text-aqua transition-colors">
+          <Link href="/#about" className="hover:text-aqua transition-colors">
             About
           </Link>
-          <Link href="#stack" className="hover:text-aqua transition-colors">
+          <Link href="/#stack" className="hover:text-aqua transition-colors">
             Stack
           </Link>
           <Link href="#projects" className="hover:text-aqua transition-colors">
             Projects
           </Link>
-          <Link href="#blog" className="hover:text-aqua transition-colors">
+          <Link href="blog" className="hover:text-aqua transition-colors">
             Blog
           </Link>
-          <Link href="#contact" className="hover:text-aqua transition-colors">
+          <Link href="/#contact" className="hover:text-aqua transition-colors">
             Contact
           </Link>
         </div>
