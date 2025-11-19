@@ -5,8 +5,6 @@ import Link from "next/link"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@components/footer"
 import { ArrowRight } from "lucide-react"
-import { useEffect, useState } from "react"
-import { Blog } from "@/src/sanity/types"
 import { useBlogs } from "@/hooks/useBlogs"
 
 export default function BlogPage() {
@@ -50,7 +48,7 @@ export default function BlogPage() {
           {/* Blog posts grid */}
           <div className="grid md:grid-cols-2 gap-8">
             {blogs.map((post, index) => (
-              <motion.article key={post._id} variants={itemVariants} whileHover={{ y: -5 }} className="group">
+              <motion.article initial='hidden' animate='visible' key={post._id} variants={itemVariants} whileHover={{ y: -5 }} className="group">
                 <Link href={`/blog/${post._id}`}>
                   <div className="bg-card border border-teal/30 rounded-lg p-6 h-full hover:border-aqua transition-all duration-300 glow-sm hover:glow-aqua cursor-pointer">
                     {/* Category badge */}
