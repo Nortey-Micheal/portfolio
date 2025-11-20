@@ -47,6 +47,15 @@ export default function BlogPostPage({
     console.log({blog})
   },[blog])
 
+  if (!blog) {
+    return (
+      <p className="w-full h-screen flex flex-col items-center justify-center">
+        Loading Blog ... 
+        <span className="text-xs">Please reload if this persists</span>
+      </p>
+    )
+  }
+
   return (
     <main className="bg-background text-foreground">
       <Navigation />
