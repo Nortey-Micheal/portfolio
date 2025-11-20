@@ -818,6 +818,13 @@
           "type": "boolean"
         },
         "optional": true
+      },
+      "readTime": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },

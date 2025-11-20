@@ -54,7 +54,7 @@ export default function BlogPage() {
                     {/* Category badge */}
                     <div className="flex items-center justify-between mb-4">
                       <span className="inline-block px-3 py-1 text-xs font-mono bg-teal/10 text-teal border border-teal/30 rounded-full">
-                        {/* {post} */}
+                        {post.readTime || 5} min read
                       </span>
                       <span className="text-xs text-foreground/40">{}</span>
                     </div>

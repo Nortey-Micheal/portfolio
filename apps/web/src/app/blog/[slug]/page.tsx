@@ -5,12 +5,17 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import { useGetBlogById } from "@/hooks/useGetBlogById"
+import { PortableText } from "next-sanity"
 
 export default function BlogPostPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
+  const [id,setId] = useState<string | null>()
+  const {blog} = useGetBlogById(id!)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -30,10 +35,22 @@ export default function BlogPostPage({
     },
   }
 
+  useEffect(() => {
+    const resolveSlug = async() => {
+      const slug = (await params).slug
+      setId(slug)
+    }
+    resolveSlug()
+  },[])
+
+  useEffect(() => {
+    console.log({blog})
+  },[blog])
+
   return (
     <main className="bg-background text-foreground">
       <Navigation />
-      <section className="min-h-screen py-20 px-6 pt-32 bg-gradient-to-b from-steel/20 to-deep">
+      <section className="min-h-screen py-20 px-6 pt-32 bg-linear-to-b from-steel/20 to-deep">
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="max-w-3xl mx-auto">
           {/* Back link */}
           <motion.div variants={itemVariants} className="mb-8">
@@ -45,13 +62,13 @@ export default function BlogPostPage({
 
           {/* Post header */}
           <motion.header variants={itemVariants} className="mb-12 pb-8 border-b border-teal/30">
-            <h1 className="text-5xl font-bold mb-4 text-aqua">Building Scalable Applications with Next.js 15</h1>
+            <h1 className="text-5xl font-bold mb-4 text-aqua">{blog?.title}</h1>
             <div className="flex flex-wrap gap-4 text-foreground/60 text-sm">
-              <span>Dec 15, 2024</span>
+              <span>{new Date(blog?._createdAt!).toDateString()}</span>
               <span>•</span>
-              <span>8 min read</span>
+              <span>{blog?.readTime || 5} min read</span>
               <span>•</span>
-              <span className="px-3 py-1 bg-teal/10 text-teal border border-teal/30 rounded-full">Backend</span>
+              <span className="px-3 py-1 bg-teal/10 text-teal border border-teal/30 rounded-full">{blog?.tags![0]}</span>
             </div>
           </motion.header>
 
@@ -60,37 +77,7 @@ export default function BlogPostPage({
             variants={itemVariants}
             className="prose prose-invert max-w-none space-y-6 text-foreground/80"
           >
-            <p>
-              Next.js 15 brings significant improvements for building scalable applications. In this comprehensive
-              guide, we'll explore the latest features and best practices.
-            </p>
-
-            <h2 className="text-3xl font-bold text-aqua mt-8">Introduction</h2>
-            <p>
-              Scalability is one of the most important concerns when building modern web applications. With Next.js 15,
-              you have powerful tools and patterns at your disposal to create applications that can grow with your user
-              base.
-            </p>
-
-            <h2 className="text-3xl font-bold text-aqua mt-8">Key Features</h2>
-            <ul className="list-disc list-inside space-y-2">
-              <li>Improved performance with optimized bundling</li>
-              <li>Enhanced server components for better scalability</li>
-              <li>Advanced caching mechanisms</li>
-              <li>Better developer experience with improved tooling</li>
-            </ul>
-
-            <h2 className="text-3xl font-bold text-aqua mt-8">Best Practices</h2>
-            <p>
-              When building scalable applications, it's crucial to follow established patterns and best practices. This
-              ensures your application remains maintainable and performs well as it grows.
-            </p>
-
-            <h2 className="text-3xl font-bold text-aqua mt-8">Conclusion</h2>
-            <p>
-              Next.js 15 provides a solid foundation for building scalable web applications. By leveraging its features
-              and following best practices, you can create applications that are both performant and maintainable.
-            </p>
+            {blog?.content && <PortableText value={blog.content}/>}
           </motion.article>
 
           {/* Navigation */}

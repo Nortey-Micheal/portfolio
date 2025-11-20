@@ -124,6 +124,7 @@ export type Blog = {
   tags?: Array<string>;
   publishedAt?: string;
   isFeatured?: boolean;
+  readTime?: string;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -224,3 +225,58 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes = Project | SanityImageCrop | SanityImageHotspot | Slug | Blog | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ../web/src/app/(backend)/api/getBlogById/[id]/route.ts
+// Variable: Blog_BY_ID_QUERY
+// Query: *[_type == "blog" && _id == $id][0]
+export type Blog_BY_ID_QUERYResult = {
+  _id: string;
+  _type: "blog";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  excerpt?: string;
+  coverImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  tags?: Array<string>;
+  publishedAt?: string;
+  isFeatured?: boolean;
+  readTime?: string;
+} | null;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    "\n  *[_type == \"blog\" && _id == $id][0]\n": Blog_BY_ID_QUERYResult;
+  }
+}

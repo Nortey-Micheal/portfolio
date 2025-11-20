@@ -66,5 +66,12 @@ export const blogSchema = defineType({
       type: "boolean",
       initialValue: false,
     }),
+
+    defineField({
+      name: 'readTime',
+      title: 'Reading Time',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    })
   ],
 });
