@@ -50,7 +50,7 @@ export default function BlogPage() {
             {blogs.map((post, index) => (
               <motion.article initial='hidden' animate='visible' key={post._id} variants={itemVariants} whileHover={{ y: -5 }} className="group">
                 <Link href={`/blog/${post._id}`}>
-                  <div className="bg-card border border-teal/30 rounded-lg p-6 h-full hover:border-aqua transition-all duration-300 glow-sm hover:glow-aqua cursor-pointer">
+                  <div className="bg-card border border-teal/30 rounded-lg p-6 h-full hover:border-aqua transition-all duration-300 cursor-pointer">
                     {/* Category badge */}
                     <div className="flex items-center justify-between mb-4">
                       <span className="inline-block px-3 py-1 text-xs font-mono bg-teal/10 text-teal border border-teal/30 rounded-full">
