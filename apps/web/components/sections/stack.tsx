@@ -32,6 +32,7 @@ const stackCategories = [
       { name: "Docker", icon: "🐳" },
       { name: "Vercel", icon: "▲" },
       { name: "AWS", icon: "☁️" },
+      { name: "Sanity.io", icon: "🔌" },
     ],
   },
 ]

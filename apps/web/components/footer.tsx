@@ -75,23 +75,23 @@ export function Footer() {
             <h4 className="font-semibold text-teal mb-4">Get in Touch</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="mailto:nortey@example.com" className="text-foreground/60 hover:text-aqua transition-colors">
-                  nortey@example.com
+                <a href="mailto:norteymicheal91@gmail.com" className="text-foreground/60 hover:text-aqua transition-colors">
+                  norteymicheal91@gmail.com
                 </a>
               </li>
               <li>
                 <a
-                  href="https://twitter.com"
+                  href="hhttps://www.linkedin.com/in/nortey-micheal-45726225b/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-foreground/60 hover:text-aqua transition-colors"
                 >
-                  Twitter
+                  LinkedIn
                 </a>
               </li>
               <li>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/Nortey-Micheal"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-foreground/60 hover:text-aqua transition-colors"
